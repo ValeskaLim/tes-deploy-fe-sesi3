@@ -4,10 +4,9 @@ import { useEffect, useState } from "react";
 interface Channel {
   id: string;
   name: string;
-  group?: string;
-  photo?: string;
-  lang?: string;
-  description?: string;
+  group: string;
+  photo: string;
+  subscriber_count: string;
 }
 
 function App() {
@@ -32,9 +31,9 @@ function App() {
       .then((response) => {
         const filteredData = response.data.filter(
           (channel: Channel) =>
-            channel.group && channel.group.toLowerCase().trim().includes("english")
+            channel.group && channel.group.toLowerCase().trim().includes("")
         );
-        console.log(response.data);
+        console.log(filteredData);
         setData(filteredData);
       })
       .catch((error) => {
@@ -46,16 +45,27 @@ function App() {
     <>
       <div className="text-center min-h-screen flex flex-col justify-center mt-5">
         <h1 className="text-blue-600 text-5xl">
-          Fetch API in React using Axios
+          Hololive English Channel List
         </h1>
-        <div className="grid grid-cols-3 gap-3 mt-5 mx-10">
+        <div className="grid grid-cols-3 gap-3 my-10 mx-50">
           {datas.map((data) => (
-            <div key={data.id} className="p-4 border rounded shadow">
-              <h2 className="text-xl font-bold">{data.name || "Unknown"}</h2>
-              <p>{data.group}</p>
-              <img src={data.photo} />
-              <p>{data.lang}</p>
-              <p>{data.description}</p>
+            <div key={data.id} className="p-4 border rounded-xl shadow">
+              <h2 className="text-3xl font-bold">{data.name}</h2>
+              <p className="text-blue-500 font-bold text-xl">{data.group}</p>
+              <div className="w-fit m-auto rounded-3xl overflow-hidden mt-4">
+                <img
+                  src={data.photo}
+                  width={500}
+                  height={500}
+                  className="w-full h-full object-fit hover:scale-[1.05] transition ease-in-out duration-150"
+                />
+              </div>
+              <p className="text-2xl">
+                Subscribers:
+                <span className="font-bold text-red-500">
+                  {data.subscriber_count}
+                </span>
+              </p>
             </div>
           ))}
         </div>
