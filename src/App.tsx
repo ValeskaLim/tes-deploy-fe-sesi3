@@ -1,14 +1,23 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+interface Channel {
+  id: string;
+  name: string;
+  group?: string;
+  photo?: string;
+  lang?: string;
+  description?: string;
+}
+
 function App() {
-  const [datas, setData] = useState([]);
+  const [datas, setData] = useState<Channel[]>([]);
 
   const API_KEY = import.meta.env.VITE_API_KEY;
 
   useEffect(() => {
     axios
-      .get("https://holodex.net/api/v2/channels", {
+      .get<Channel[]>("https://holodex.net/api/v2/channels", {
         params: {
           org: "Hololive",
           lang: "en",
@@ -22,7 +31,7 @@ function App() {
       })
       .then((response) => {
         const filteredData = response.data.filter(
-          (channel) =>
+          (channel: Channel) =>
             channel.group && channel.group.toLowerCase().trim().includes("english")
         );
         console.log(response.data);
@@ -42,7 +51,7 @@ function App() {
         <div className="grid grid-cols-3 gap-3 mt-5 mx-10">
           {datas.map((data) => (
             <div key={data.id} className="p-4 border rounded shadow">
-              <h2 className="text-xl font-bold">{data.name}</h2>
+              <h2 className="text-xl font-bold">{data.name || "Unknown"}</h2>
               <p>{data.group}</p>
               <img src={data.photo} />
               <p>{data.lang}</p>
